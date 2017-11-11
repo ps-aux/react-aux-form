@@ -2,27 +2,6 @@ import React from 'react'
 
 const hasChildren = ch => ch && ch.props && ch.props.children
 
-const isCollection = children => children.forEach
-
-export const findChildren = (predicate, node) => {
-
-    if (!hasChildren(node))
-        return []
-
-    const childrenProp = node.props.children
-    // children can be a single object
-    const children = isCollection(childrenProp) ? childrenProp : [childrenProp]
-
-    return children.reduce((acc, c) => {
-        if (predicate(c)) {
-            acc.push(c)
-            return acc
-        } else {
-            return acc.concat(findChildren(predicate, c))
-        }
-    }, [])
-}
-
 export const mapChildrenRecursively = (predicate, props, clone, {onMatch}) => {
     if (!props ||
         !props.children ||
