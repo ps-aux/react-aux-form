@@ -7,18 +7,21 @@ const IncrementingInput = asField(({onChange, value}) =>
         Click count: {value}
     </div>)
 
-const TextInput = asField(({value, onChange, error}) =>
-    <div>
+const TextInput = asField(({value, onChange, error}) => {
+    if (error)
+        error = typeof error === "string" ? error : error.text
+    return <div>
         <input value={value}
                onChange={e => onChange(e.target.value)}/>
-        {error && error}
-    </div>)
+        {error}
+    </div>
+})
 
 const validate = vals => {
     const {name} = vals
     const errors = {}
     if (!name) {
-        errors.name = 'Missing name'
+        errors.name = {text: 'Missing name'}
         return errors
     }
     if (name.length < 3) {
@@ -79,7 +82,7 @@ class DevApp extends React.Component {
                 <h2>All errors</h2>
                 {Object.entries(errors).map(([name, value]) =>
                     <div key={name}>
-                        <strong>{name}</strong> <span>{value}</span>
+                        <strong>{name}</strong> <span>{JSON.stringify(value)}</span>
                     </div>
                 )}
             </div>}
