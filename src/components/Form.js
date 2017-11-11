@@ -1,61 +1,29 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import { mapChildrenRecursively } from 'src/util'
-
-const stateFromProps = props => {
-    const {values, errors} = props
-    return {values, errors}
-}
+import {mapChildrenRecursively} from 'src/util'
 
 const isField = c => c.type && c.type._form_field === true
 
 class Form extends Component {
 
-    constructor (props) {
-        super(props)
-        this.state = stateFromProps(props)
-    }
-
-    setFields (props) {
-        this.fields = getInputNames(props)
-    }
-
-    componentWillReceiveProps (props) {
-        this.setState({...stateFromProps(props)})
-    }
-
-    valChanged = (name, val) => {
-        const values = {...this.state.values, [name]: val}
-        this.setState({values})
-    }
-
-    validateValues = values => {
-        const {validator} = this.props
-        if (!validator)
-            return
-        return validator(values)
-    }
+    valChanged = (name, val) =>
+        this.props.onChange({...this.props.values, [name]: val})
 
     onSubmit = e => {
         e.preventDefault()
 
-        const {onSubmit, onError} = this.props
-        const {values} = this.state
-        const errors = this.validateValues(values)
-
-        this.setState({errors})
+        const {onSubmit, onSubmitFailed, failableSubmit} = this.props
+        const {values, errors} = this.props
 
         if (errors && Object.keys(errors).length > 0) {
-            // TODO remove
-            console.debug('Form has errors:', errors)
-            if (onError)
-                onError(errors, values)
+            if (failableSubmit)
+                onSubmitFailed(errors, values)
             return
         }
         onSubmit(values)
     }
 
-    render () {
+    render() {
         const {children, className, style} = this.props
         const _children = this.children(children)
 
@@ -66,7 +34,7 @@ class Form extends Component {
         </form>
     }
 
-    children (children) {
+    children(children) {
         const names = []
         const validateName = c => {
             const {name} = c.props
@@ -83,9 +51,10 @@ class Form extends Component {
         if (!name)
             throw new Error(`Missing 'name' prop`)
 
-        const {values, errors} = this.state
+        const {values, errors, showErrors} = this.props
         const value = values[name]
-        const error = errors && errors[name]
+        const error = showErrors !== false
+            && errors && errors[name]
 
         return React.cloneElement(field, {
             onChange: val => {
@@ -105,9 +74,9 @@ class Form extends Component {
 Form.propTypes = {
     values: PropTypes.object.isRequired,
     errors: PropTypes.object,
+    failableSubmit: PropTypes.any,
     onSubmit: PropTypes.func.isRequired,
-    onError: PropTypes.func,
-    validator: PropTypes.func
+    onSubmitFailed: PropTypes.func
 }
 
 export default Form

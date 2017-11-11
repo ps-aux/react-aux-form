@@ -1,14 +1,18 @@
 import React from 'react'
-import { asField, Form } from 'src'
+import {asField, Form} from 'src'
 
 const IncrementingInput = asField(({onChange, value}) =>
     <div onClick={() => onChange(value + 1)}
          style={{cursor: 'pointer'}}>
         Click count: {value}
     </div>)
-const TextInput = asField(({value, onChange}) =>
-    <input value={value}
-           onChange={e => onChange(e.target.value)}/>)
+
+const TextInput = asField(({value, onChange, error}) =>
+    <div>
+        <input value={value}
+               onChange={e => onChange(e.target.value)}/>
+        {error && error}
+    </div>)
 
 const validate = vals => {
     const {name} = vals
@@ -37,17 +41,31 @@ class DevApp extends React.Component {
         this.setState({values, errors: null})
     }
 
-    onErrors = (errors, values) => {
-        this.setState({errors, values})
+    submitFailed = () => {
+        console.log('cannot submit you have errors', this.state.errors)
+        this.setState({showErrors: true})
+    }
+
+    valuesChanged = values => {
+        const errors = validate(values)
+        this.setState({values, errors, showErrors: false})
     }
 
     render = () => {
-        const {values, errors} = this.state
-        return <div>
+        const {values, errors, showErrors} = this.state
+        const hasError = errors && Object.keys(errors).length
+        const style = {
+            color: hasError && showErrors ? 'red' : 'black'
+        }
+        return <div style={style}>
             <Form values={values}
-                  validator={validate}
-                  onError={this.onErrors}
+                  errors={errors}
+                  onChange={this.valuesChanged}
+                  showErrors={showErrors}
+                  failableSubmit={true}
+                  onSubmitFailed={this.submitFailed}
                   onSubmit={this.submit}>
+
                 <h2>This is a Form</h2>
                 <IncrementingInput name="clicks"/>
                 <TextInput name="name"/>
@@ -61,15 +79,10 @@ class DevApp extends React.Component {
                 <h2>All errors</h2>
                 {Object.entries(errors).map(([name, value]) =>
                     <div key={name}>
-                        <label>{name}</label>:
-                        <span>{value}</span>
+                        <strong>{name}</strong> <span>{value}</span>
                     </div>
                 )}
             </div>}
-            <p>
-                <h2> rules</h2>
-                len(name) > 3
-            </p>
         </div>
 
     }

@@ -1,5 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const app = require('./package.json')
 
 const config = {
     entry: path.resolve(__dirname, 'dev/index.js'),
@@ -30,6 +31,7 @@ const config = {
     plugins: [
         new HtmlWebpackPlugin({
             inject: true,
+            title: app.name,
             template: path.resolve(__dirname, 'dev/index.html')
         })],
 
