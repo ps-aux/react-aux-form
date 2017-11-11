@@ -1,6 +1,6 @@
 {
-  "name": "react-informal",
-  "version": "2.0.0",
+  "name": "react-aux-form",
+  "version": "0.1.0",
   "description": "Yet another React forms lib",
   "main": "lib/index.js",
   "scripts": {
@@ -54,8 +54,7 @@
     "yargs": "^8.0.2"
   },
   "dependencies": {
-    "prop-types": "^15.5.10",
-    "validator": "^8.0.0"
+    "prop-types": "^16.1.0"
   },
   "peerDependencies": {
     "react": "^16.1.0"

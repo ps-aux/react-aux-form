@@ -1,18 +1,14 @@
-/*
-* Taken from https://github.com/krasimir/webpack-library-starter
-*/
-
 const path = require('path')
 
-const libraryName = require('./package.json').name
+const artifact = require('./package.json')
 
 const config = {
-    entry: path.resolve(__dirname, 'src/components/index.js'),
+    entry: path.resolve(__dirname, 'src/index.js'),
     devtool: 'source-map',
     output: {
         path: path.resolve(__dirname, 'lib'),
         filename: 'index.js',
-        library: libraryName,
+        library: artifact.name,
         libraryTarget: 'umd',
         umdNamedDefine: true
     },
@@ -29,17 +25,14 @@ const config = {
                 loader: 'babel-loader',
                 exclude: /(node_modules)/
             }
-/*            {
-                test: /(\.jsx|\.js)$/,
-                loader: 'eslint-loader',
-                exclude: /node_modules/
-            }   */
         ]
     },
+    plugins: [
+    ],
     externals: [
         'react',
         'react-dom',
-        'validator'
+        'prop-types'
     ],
 }
 
