@@ -1,5 +1,5 @@
 import React from 'react'
-import {asField, Form} from 'src'
+import {asField, Form} from 'src/index'
 
 const IncrementingInput = asField(({onChange, value}) =>
     <div onClick={() => onChange(value + 1)}
@@ -7,7 +7,7 @@ const IncrementingInput = asField(({onChange, value}) =>
         Click count: {value}
     </div>)
 
-const TextInput = asField(({value, onChange, error}) => {
+let TextInput = ({value, onChange, error}) => {
     if (error)
         error = typeof error === "string" ? error : error.text
     return <div>
@@ -15,7 +15,12 @@ const TextInput = asField(({value, onChange, error}) => {
                onChange={e => onChange(e.target.value)}/>
         {error}
     </div>
-})
+}
+
+TextInput = asField(TextInput)
+
+
+
 
 const validate = vals => {
     const {name} = vals
@@ -69,23 +74,9 @@ class DevApp extends React.Component {
                   onSubmitFailed={this.submitFailed}
                   onSubmit={this.submit}>
 
-                <h2>This is a Form</h2>
+                {/*<h2>This is a Form</h2>*/}
                 <IncrementingInput name="clicks"/>
-                <TextInput name="name"/>
-                <br/>
-                <button type="submit">Submit</button>
             </Form>
-            <h2>Values</h2>
-            <pre> {JSON.stringify(values)} </pre>
-            {errors &&
-            <div>
-                <h2>All errors</h2>
-                {Object.entries(errors).map(([name, value]) =>
-                    <div key={name}>
-                        <strong>{name}</strong> <span>{JSON.stringify(value)}</span>
-                    </div>
-                )}
-            </div>}
         </div>
 
     }

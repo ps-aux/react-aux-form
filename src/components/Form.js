@@ -43,10 +43,10 @@ class Form extends Component {
             names.push(name)
         }
         return mapChildrenRecursively(isField, {children},
-            this.enhancedInput, {onMatch: validateName})
+            this.enhancedProps, {onMatch: validateName})
     }
 
-    enhancedInput = field => {
+    enhancedProps = field => {
         const name = field.props.name
         if (!name)
             throw new Error(`Missing 'name' prop`)
@@ -56,7 +56,7 @@ class Form extends Component {
         const error = showErrors !== false
             && errors && errors[name]
 
-        return React.cloneElement(field, {
+        return  {
             onChange: val => {
                 this.valChanged(name, val)
 
@@ -67,7 +67,7 @@ class Form extends Component {
             },
             value,
             error
-        })
+        }
     }
 }
 

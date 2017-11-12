@@ -2,12 +2,18 @@ import React from 'react'
 
 const hasChildren = ch => ch && ch.props && ch.props.children
 
-export const mapChildrenRecursively = (predicate, props, clone, {onMatch}) => {
+export const mapChildrenRecursively = (predicate, props,
+                                       map, {onMatch}) => {
     if (!props ||
-        !props.children ||
-        !props.children.length)
+        !props.children)
         return
 
+    const {children} = props
+    // Is single node
+    if (props.length === undefined)
+        return React.cloneElement(children, map(children))
+
+    console.log('children', children)
     return React.Children.map(props.children,
         c => {
             if (!c) // Where to we get null from ? TODO find out
@@ -28,6 +34,6 @@ export const mapChildrenRecursively = (predicate, props, clone, {onMatch}) => {
 
             onMatch(c)
 
-            return clone(c)
+            return React.cloneElement(c, map(c))
         })
 }
