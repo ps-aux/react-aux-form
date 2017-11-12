@@ -74,9 +74,23 @@ class DevApp extends React.Component {
                   onSubmitFailed={this.submitFailed}
                   onSubmit={this.submit}>
 
-                {/*<h2>This is a Form</h2>*/}
+                <h2>This is a Form</h2>
                 <IncrementingInput name="clicks"/>
+                <TextInput name="name"/>
+                <br/>
+                <button type="submit">Submit</button>
             </Form>
+            <h2>Values</h2>
+            <pre> {JSON.stringify(values)} </pre>
+            {errors &&
+            <div>
+                <h2>All errors</h2>
+                {Object.entries(errors).map(([name, value]) =>
+                    <div key={name}>
+                        <strong>{name}</strong> <span>{JSON.stringify(value)}</span>
+                    </div>
+                )}
+            </div>}
         </div>
 
     }

@@ -1,6 +1,6 @@
 {
   "name": "react-aux-form",
-  "version": "0.1.2",
+  "version": "0.1.5",
   "description": "Yet another React forms lib",
   "main": "lib/index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "start": "webpack-dev-server --open --config webpack.config.dev.js",
     "test": "jest",
     "test:watch": "jest --watch",
-    "release": "npm-run-all build test && release-it",
+    "release": "npm run build && npm publish",
     "test-build": "npm-run-all build test"
   },
   "keywords": [
